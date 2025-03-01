@@ -25,3 +25,15 @@ cargar el geoJson usando async away
 
 crear un boton y asignarle un manejador de eventos 
 
+# problema 6
+
+¿Donde esta el geojson de los arboles de Bogotá ?
+
+Esta en https://datosabiertos.bogota.gov.co/dataset/censo-arbolado-urbano
+
+# problema 7
+
+crear el bbox de mi barrio
+
+# problema 8 
+Descargar los datos filtrados desde la API (servicio REST)
