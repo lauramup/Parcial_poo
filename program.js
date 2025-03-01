@@ -20,3 +20,18 @@ loadPolygon();
 let btnTress =document.getElementById('btnTress');
 
 btnTress.addEventListener('click', ()=> alert("hola"));
+
+//segundo
+
+async function loadPolygonarb() {  
+    let myData2 = await fetch('arboles_chircalsur.geojson');
+    let myPolygon2 = await myData2.json();
+    
+    L.geoJSON(myPolygon2, {
+        style: {
+            color: "blue"
+        }
+    }).addTo(map);
+}
+
+loadPolygonarb();
