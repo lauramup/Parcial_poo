@@ -27,3 +27,28 @@ crear un boton y asignarle un manejador de eventos
 
 Creé una rama
 
+
+# problema 6
+
+GeoJson arboles Donde esta?
+
+Esràn en: https://datosabiertos.bogota.gov.co/dataset/censo-arbolado-urbano 
+Filtrar datos para no meter toda la capa
+
+Archivo Rest-descargar.salen las consultas que se pueden hacer 
+
+# problema 7
+
+Crear el Bounding Box (BB) de mi barrio 
+Voy a GeoJsonn io
+
+______
+
+# problema 8
+
+Descargar los datos filtrados desde la API (Servicio REST)
+Filtrar
+Intersectar con el barrio
+
+
+
