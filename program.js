@@ -1,3 +1,7 @@
+// leyenda del mapa 
+document.getElementById('legend').style.zIndex = "1000";
+
+
 var map = L.map('map').setView([4.570341350278083, -74.14461308243789], 17);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,6 +66,19 @@ btnDistance.addEventListener('click', async () => {
     }));
 
     let centroide = [ -74.144777042307, 4.570396506618631 ];
+    // Agregar marcador del centroide con estilo personalizado
+    let centroideMarker = L.circleMarker([centroide[1], centroide[0]], {
+    radius: 5,        // Tamaño pequeño
+    fillColor: '#FF00FF', // Color rojo
+    color: '#FF00FF',     // Borde rojo
+    weight: 1, 
+    opacity: 1,
+    fillOpacity: 0.9,
+    }).addTo(map);
+
+// Agregar popup al marcador del centroide
+centroideMarker.bindPopup("Punto central del barrio");
+
     let distances = [];
 
     trees.forEach((tree) => {
@@ -82,8 +99,63 @@ btnDistance.addEventListener('click', async () => {
     generatePDF(distances, trees.length); // Comentar si no se usa el PDF
 });
 
+let btnIncidents = document.getElementById('btnIncidents');
 
-// Generar PDF corregido
+btnIncidents.addEventListener('click', async function () {
+    let response = await fetch("siniestros_chircalsur.geojson");
+    let datos = await response.json();
+
+    console.log(`Número de incidentes: ${datos.features.length}`);
+
+    // Calcular distancias entre siniestros
+let distances = [];
+let incidents = datos.features.map((feature, index) => ({
+    id: index + 1,
+    coordinates: feature.geometry.coordinates
+}));
+
+for (let i = 0; i < incidents.length; i++) {
+    for (let j = i + 1; j < incidents.length; j++) {
+        let distance = turf.distance(
+            turf.point(incidents[i].coordinates),
+            turf.point(incidents[j].coordinates)
+        );
+        distances.push([
+            `Siniestro ${incidents[i].id}`,
+            `Siniestro ${incidents[j].id}`,
+            distance.toFixed(3) // Distancia en kilómetros
+        ]);
+    }
+}
+
+console.log(distances);
+
+// Generar PDF con las distancias entre siniestros
+generateIncidentPDF(distances, incidents.length);
+
+    //puntos en el mapa 
+
+    L.geoJSON(datos, {
+        pointToLayer: (feature, latlong) => {
+            return L.circleMarker(latlong, {
+                radius: 6,
+                fillColor: 'red',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.7,
+            });
+        },
+        onEachFeature: (feature, layer) => {
+            let claseAccidente = feature.properties.CLASE_ACC; 
+            layer.bindPopup(` Clase de Accidente: ${claseAccidente}`);
+        }
+    }).addTo(map);
+});
+
+
+
+
+// Generar PDF para distancias de los arboles 
 
 function generatePDF(distances, totalTrees) {
     let { jsPDF } = window.jspdf;
@@ -137,4 +209,34 @@ function generatePDF(distances, totalTrees) {
     documentPDF.save("reporte_arboles.pdf");
 }
 
+// generar PDF para siniestros 
+function generateIncidentPDF(distances, totalIncidents) {
+    let { jsPDF } = window.jspdf;
+    let documentPDF = new jsPDF();
+
+    documentPDF.setFontSize(16);
+    documentPDF.setFont("helvetica", "bold");
+    documentPDF.text("REPORTE DE DISTANCIAS ENTRE SINIESTROS", 10, 10);
+
+    documentPDF.setFontSize(10);
+    let fecha = new Date().toLocaleString();
+    documentPDF.text(`Fecha de generación: ${fecha}`, 10, 20);
+
+    documentPDF.autoTable({
+        startY: 30,
+        head: [['Siniestro 1', 'Siniestro 2', 'Distancia (km)']],
+        body: distances,
+        theme: "striped",
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [200, 0, 0], textColor: [255, 255, 255], fontStyle: "bold" },
+        alternateRowStyles: { fillColor: [240, 240, 240] }
+    });
+
+    let finalY = documentPDF.lastAutoTable.finalY + 10;
+    documentPDF.setFontSize(12);
+    documentPDF.setFont("helvetica", "bold");
+    documentPDF.text(`Total de siniestros registrados: ${totalIncidents}`, 10, finalY);
+
+    documentPDF.save("reporte_siniestros.pdf");
+}
 

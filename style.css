@@ -1,17 +1,88 @@
 #map { height: 100%; }
 
 #buttonContainer{
-    position: relative;
-    top: 20px;
+    position: absolute;
+    top: 10px;
     left: 100px;
     z-index: 1000;
 } 
-.buttons {
-    background-color: blue;
-    color: white;
+#btnTrees {
+    background-color: rgb(183, 241, 186);
+    color: black;
     height: 40px;
     width: 140px;
-    font-size: 25px;
+    font-size: 15px;
+    border: 2px solid rgb(11, 72, 19);
+    cursor: pointer;
+}
 
+#btnDistance {
+    background-color: rgb(107, 219, 250);
+    color: black;
+    height: 40px;
+    width: 140px;
+    font-size: 15px;
+    border: 2px solid rgba(0, 89, 255, 0.82);;
+    cursor: pointer;
+}
 
+#btnIncidents {
+    background-color: rgb(251, 182, 182);
+    color: black;
+    height: 40px;
+    width: 140px;
+    font-size: 15px;
+    border:  2px solid rgba(255, 60, 0, 0.82);
+    cursor: pointer;
+}
+.legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.legend h4 {
+    margin: 0;
+    padding-bottom: 5px;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.legend div {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.legend-icon {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+/* Estilos de los iconos en la leyenda */
+.tree {
+    background-color: rgb(0, 90, 0);
+    opacity: 0.5;
+    border: 2px solid rgba(0, 174, 249, 0.82);
+}
+
+.central-point {
+    background-color: rgb(255, 87, 255);
+    border: 2px solid rgb(255, 87, 255);
+}
+
+.incident {
+    background-color: red;
+    opacity: 0.7;
+    border: 2px solid rgba(0, 174, 249, 0.82);
 }
