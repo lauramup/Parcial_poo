@@ -6,10 +6,14 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+var myPolygon; //Usarla para todo el código
+
 async function loadPolygon() {  
     let myData = await fetch('CostaAzul.geojson');
-    let myPolygon = await myData.json();
-    
+    myPolygon = await myData.json();  //se quita el let para dejarlo como variable global
+   
+    console.log("✅ Polígono cargado en `myPolygon`:", myPolygon);  // Depuración
+   
     L.geoJSON(myPolygon, {
         style: {
             color: "blue"
@@ -18,6 +22,8 @@ async function loadPolygon() {
 }
 
 loadPolygon();
+
+//arbolesCostaAzul.geojson.SE OBTUVO CON EL COLAB¡¡¡
 
 //______________________________________________
 
@@ -120,6 +126,10 @@ btnDistance.addEventListener('click',
 )
 
 
+//_______________________________________________
+
+
+
       function generatePDF(distances,TotalTrees){
         
 
@@ -140,8 +150,61 @@ btnDistance.addEventListener('click',
         }
 
 
-        
+ //_______________________________________________
+       
+ let btnSini = document.getElementById('btnSini');
 
+ btnSini.addEventListener('click',
+     
+     async function(){
+ 
+         console.log("✅ Botón Siniestros presionado");  // Verifica que el botón está funcionando
+         
+         let response =await fetch ('historico_siniestros_bogota_d.c.geojson');
+         let datos = await response.json();
+ 
+         console.log("✅ Datos cargados:", datos); // Verificar que los datos están bien
+
+         if (!myPolygon || !myPolygon.features) {
+            console.error("❌ Error: El polígono aún no se ha cargado o no es un GeoJSON válido.");
+            return;
+        }
+
+         // Extraer solo la geometría del polígono
+         let polygonGeometry = myPolygon.features[0].geometry;  // 📌 Tomar solo la geometría
+
+
+         console.log("✅ Polígono cargado correctamente:", myPolygon);
+ 
+        //Cortar con poligono
+
+        let siniestrosCostaAzul = datos.features.filter(siniestro => turf.booleanPointInPolygon(
+            turf.point(siniestro.geometry.coordinates),
+            polygonGeometry
+            )
+        );
+
+        console.log("Siniestros dentro del polígono:", siniestrosCostaAzul.length);
+        
+        
+         //agregar la capa al mapa
+ 
+         L.geoJSON({ type: "FeatureCollection", features: siniestrosCostaAzul }, {
+                 pointToLayer: (feature,latlong) => {
+ 
+                     return L.circleMarker(latlong, {
+ 
+                         radius:5,
+                         fillColor:'red',
+                           color: 'black',
+                         weight: 1,
+                         opacity:1,
+                         fillOpacity:0.5
+                     })
+                 }
+             }).addTo(map);
+     }
+ )
 
 
 
