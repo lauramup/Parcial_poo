@@ -117,7 +117,7 @@ btnDistance.addEventListener('click',
 
                         )
                         }
-                    }
+                    } 
                 ) 
             }
             )
