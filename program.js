@@ -121,7 +121,7 @@ btnDistance.addEventListener('click',
                 ) 
             }
             )
-            generatePDF(distances,trees.lenght)
+            generatePDF(distances,trees.length)
         }
 )
 
